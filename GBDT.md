@@ -233,13 +233,11 @@ Great — let's break down the difference between **AdaBoost** and **GBDT** in h
 * For each iteration $t$:  
 
   1. Compute pseudo-residuals:  
-
      $ r_{i}^{(t)} = - \frac{\partial L(y_i, F(x_i))}{\partial F(x_i)} $  
 
   2. Train a tree to predict $r_i^{(t)}$ (a regression problem).  
 
   3. Update the model:  
-
      $ F_t(x) = F_{t-1}(x) + \eta h_t(x) $
 
 ➡️ GBDT minimizes the loss function via **gradient descent in function space**.
@@ -333,8 +331,7 @@ Great question — RankNet and LambdaMART are both **learning-to-rank algorithms
 * **Core idea**: Learn pairwise preferences using a **neural network** (but can also be adapted to GBDT).  
 
 * **Loss**: Uses a **pairwise logistic loss**:  
-
-  $$ L = \sum_{(i,j)} \log(1 + e^{-\sigma (s_i - s_j)}) $$  
+  $ L = \sum_{(i,j)} \log(1 + e^{-\sigma (s_i - s_j)}) $
 
   where $s_i, s_j$ are scores for documents $i$ and $j$, and the pair $(i, j)$ is such that $i$ should be ranked higher than $j$.  
 
