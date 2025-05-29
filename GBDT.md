@@ -147,11 +147,11 @@ Yes — that's a **very fair and insightful way** to frame the difference. Here'
 
 * **Training**: You **update the parameters** $\theta$ of a **fixed architecture** (e.g., layers, activations).  
 
-* **Each gradient step** tweaks the internal weights:  
+* **Each gradient step** tweaks the internal weights:
 
-  $$ \theta\_{t+1} = \theta_t - \eta \cdot \nabla_\theta L(f(x; \theta), y) $$  
+$$ \theta_{t+1} = \theta_t - \eta \cdot \nabla_\theta L(f(x; \theta), y) $$
 
-* The **model function $$f(x; \theta)$$** stays the same; its parameters get adjusted.
+* The **model function $f(x; \theta)$** stays the same; its parameters get adjusted.
 
 ✅ Mental model: *“I’m sculpting one function more precisely by tuning its knobs.”*
 
@@ -163,9 +163,9 @@ Yes — that's a **very fair and insightful way** to frame the difference. Here'
 
 * **Training**: You **don’t change existing trees**. You **add a new function (tree)** at each step that corrects the current model.  
 
-* You’re updating the overall function $$F(x)$$ itself:  
+* You’re updating the overall function $F(x)$ itself:
 
-  $ F_{m}(x) = F_{m-1}(x) + \eta h_m(x) $  
+$$ F_{m}(x) = F_{m-1}(x) + \eta h_m(x) $$
 
 * Each $h_m(x)$ is trained to fit the **gradient of the loss** w.r.t. $F_{m-1}(x)$.
 
