@@ -73,3 +73,129 @@ Here’s a **side-by-side table** illustrating **TF (Term Frequency)**, **IDF (I
 1. **Common words ("the", "is") have low IDF** → Since they appear in almost all documents, their IDF is **close to 0**, meaning they contribute **little to TF-IDF**.  
 2. **Less frequent words ("photosynthesis", "quantum") have high IDF** → Since they appear in **fewer documents**, they are more **important** in distinguishing documents.  
 3. **TF-IDF balances term frequency and importance** → Even if a term appears multiple times in a document (high TF), it **only gets a high TF-IDF if it is rare in the corpus**.
+
+## BoW \- Bag of Words
+
+The **Bag of Words (BoW)** model is one of the simplest and most widely used representations of text in natural language processing (NLP) and information retrieval.
+
+---
+
+### **🔹 What is the Bag of Words Model?**
+
+At its core:
+
+BoW represents a **document** as a **set of individual words**, ignoring grammar, word order, and sentence structure — keeping only **which words appear** and **how often**.
+
+---
+
+### **🧱 How it works:**
+
+1. **Build a vocabulary**:  
+    From a collection of documents, list **all unique words**.
+
+2. **Vectorize each document**:  
+    For every document, count how many times each word in the vocabulary appears.  
+    These counts form the **feature vector** for that document.
+
+---
+
+### **🧾 Example:**
+
+Suppose we have 3 documents:
+
+* Doc1: `"the cat sat"`
+
+* Doc2: `"the dog barked"`
+
+* Doc3: `"the cat barked"`
+
+**Vocabulary**: `["the", "cat", "sat", "dog", "barked"]`
+
+**BoW Vectors**:
+
+| Document | the | cat | sat | dog | barked |
+| ----- | ----- | ----- | ----- | ----- | ----- |
+| Doc1 | 1 | 1 | 1 | 0 | 0 |
+| Doc2 | 1 | 0 | 0 | 1 | 1 |
+| Doc3 | 1 | 1 | 0 | 0 | 1 |
+
+* These vectors can now be used for **similarity comparisons**, **classification**, or **retrieval**.
+
+---
+
+### **✅ Pros:**
+
+* Simple and fast
+
+* Captures basic term frequency
+
+* Works well with small datasets
+
+### **❌ Cons:**
+
+* Ignores word order and context ("Paris is beautiful" ≈ "Beautiful is Paris")
+
+* Can produce large, sparse vectors
+
+* Doesn't handle synonyms or semantics
+
+---
+
+## CBoW \- Continuous Bag of Words
+
+The **Continuous Bag of Words (CBOW)** model is a variant of Word2Vec used to **learn word embeddings** — dense vector representations of words based on their surrounding context.
+
+---
+
+### 🔍 CBOW in a Nutshell
+
+**CBOW predicts a target word from its context words.** That is, given the words around a missing word, the model tries to guess the missing word.
+
+---
+
+### 🧠 How It Works
+
+Suppose you have this sentence:
+
+"The quick brown fox jumps over the lazy dog"
+
+To train on the word `"fox"` with a window size of 2, CBOW takes the **context words**:
+
+\["quick", "brown", "jumps", "over"\]
+
+And trains the model to **predict** the target word:
+
+→ "fox"
+
+So it learns:
+
+f("quick", "brown", "jumps", "over") ≈ "fox"
+
+It does this over many such examples in a large corpus, and in the process learns embeddings for each word.
+
+---
+
+### 📦 Architecture Summary:
+
+1. **Input**: Several context words (e.g., 4 words)  
+2. **Embedding lookup**: Get vectors for each context word  
+3. **Average** (or sum) those vectors  
+4. **Feed into a softmax layer** to predict the center (target) word
+
+---
+
+### 🤝 CBOW vs Skip-gram (Other Word2Vec Model)
+
+| Model | Predicts | Training Target | Good for |
+| :---- | :---- | :---- | :---- |
+| **CBOW** | Center word from context | Given neighbors → predict word | **Faster** on frequent words |
+| **Skip-gram** | Context from center word | Given word → predict neighbors | Better for **rare words** |
+
+---
+
+### 🧠 Why It’s Called "Continuous" Bag of Words?
+
+* Like Bag of Words (BoW), it treats input as a **set of words**, ignoring word order (it's still a “bag”).  
+* But it's **"continuous"** because it uses **continuous-valued vectors (embeddings)** rather than binary or count features.
+
+---
