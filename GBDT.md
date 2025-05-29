@@ -232,11 +232,13 @@ Great — let's break down the difference between **AdaBoost** and **GBDT** in h
 
 * For each iteration $t$:  
 
-  1. Compute pseudo-residuals: $r_{i}^{(t)} = - \frac{\partial L(y_i, F(x_i))}{\partial F(x_i)}$  
+  1. Compute pseudo-residuals:  
+  $r_{i}^{(t)} = - \frac{\partial L(y_i, F(x_i))}{\partial F(x_i)}$  
 
   2. Train a tree to predict $r_i^{(t)}$ (a regression problem).  
 
-  3. Update the model: $F_t(x) = F_{t-1}(x) + \eta h_t(x)$
+  3. Update the model:  
+  $F_t(x) = F_{t-1}(x) + \eta h_t(x)$
 
 ➡️ GBDT minimizes the loss function via **gradient descent in function space**.
 
