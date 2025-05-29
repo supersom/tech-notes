@@ -54,7 +54,10 @@ There’s no notion of “batch” here like in neural networks. Instead, **the 
 
 ---
 
-Let me know if you want this mapped to a mathematical optimization framework or visualized like gradient descent in function space — both are cool ways to deepen the understanding.
+2 cool ways to deepen this understanding:
+
+* mapped to a mathematical optimization framework
+* visualized like gradient descent in function space - this is what I'll focus on as it's peculiar to GBDTs
 
 ###### *Visualized like grad desc in function space*
 
