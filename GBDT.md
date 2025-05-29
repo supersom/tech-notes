@@ -71,7 +71,7 @@ Instead of optimizing over a vector of weights like in neural nets, gradient boo
 
 So instead of:
 
-$ \theta_{t+1} = \theta_t - \eta \nabla_\theta L(\theta) $
+$$ \theta_{t+1} = \theta_t - \eta \nabla_\theta L(\theta) $$
 
 we do:
 
