@@ -42,6 +42,28 @@ docker run --gpus all -it myimage
 
 docker run -e PYTHONPATH="/app/src:$PYTHONPATH" -p 8000:8000 myimage
 
+### Run with mounted folder
+
+There are bind-mounts and volumes
+
+* bind-mounts: any folder in the host FS can be mapped to a container folder.
+* volumes: Create a volume first. The volume is created in /var/lib/docker/volumes. Now mount that volume and it behaves like bind-mounts. Preferred for backups.
+
+#### bind-mounts
+
+Mount "~/code/mlops-iris" to "/app" and tracks changes
+`docker run -v ~/code/mlops-iris:/app`
+
+#### volumes
+
+Create volume iris. Created in /var/lib/docker/volumes
+`docker volume create iris`
+
+`docker volume ls` # should show "iris"
+
+Mounts volume "iris" to "/app" in container, dumps data from /app to iris and tracks changes
+`docker run -v iris:/app myimage`
+
 ### Stop container
 
 docker stop container_id
@@ -159,3 +181,13 @@ curl -o output.html https://example.com
 ### Send custom headers
 
 curl -H "Authorization: Bearer token123" https://api.example.com/endpoint
+
+## Linux
+
+### find - search / for {aws_completer}
+
+find / -name {aws_completer}
+
+### Looking for env vars containing {STR}
+
+printenv | grep {STR}
