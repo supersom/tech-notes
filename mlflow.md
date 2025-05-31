@@ -1,10 +1,24 @@
 # Setting up MLFlow server
 
-NOTES: Running `> mlflow ui` automatically starts a local mlflow tracking server
+**NOTES**: Running `> mlflow ui` automatically starts a local mlflow tracking server and by default it tracks artifacts and metadata in the local FS. I am yet to try pointing the metadata and artifact store on `mlflow ui` to PostgreSQL and S3/MinIO using the command:
 
-Here's how to set up a **remote MLflow tracking server** using **S3 for artifact storage** and **PostgreSQL for tracking metadata** — ideal for production or team environments, and easily extendable to AWS deployment later.
+```bash
+mlflow ui \
+  --backend-store-uri postgresql://mlflow:mlflow@localhost:5432/mlflowdb \
+  --default-artifact-root s3://my-mlflow-artifacts/
+```
 
-It is also possible to set up an MLflow server that stores artifacts into file storage [`./mlruns`] or into a local object store [MinIO], and metadata into a local PostgreSQL DB.
+Here, we'll be setting up and running the remote MLflow tracking server in several configurations:
+
+1. using **S3 for artifact storage** and **local PostgreSQL for tracking metadata** — ideal for production or team environments, and easily extendable to AWS deployment later.
+
+2. storing artifacts into file storage [`./mlruns`] or into a local object store [MinIO], and metadata into a local PostgreSQL DB.
+
+3. Finally, we'll explore setting MLflow server up on AWS EC2:
+
+    a. with PostgreSQL DB and local object store running as remote processes
+
+    b. using AWS RDS and S3 services
 
 ---
 
@@ -102,19 +116,7 @@ os.environ["MLFLOW_TRACKING_URI"] = "http://localhost:5000"
 
 ```bash
 dvc repro
-mlflow ui --backend-store-uri postgresql://...  # optional, if you want a second viewer
 ```
-
----
-
-## ✅ Optional: Deploy on AWS EC2 or ECS
-
-Once verified locally, you can:
-
-* Deploy PostgreSQL (RDS)
-* Keep artifacts on S3
-* Run MLflow server on EC2
-* Use a domain + SSL via Nginx/Cloudflare
 
 ---
 
@@ -186,10 +188,24 @@ volumes:
 
 4. Create the S3 bucket in MinIO (use [MinIO Console](http://localhost:9000) or `mc` CLI):
 
+    Install MinIO client (mc) ([instructions](https://min.io/docs/minio/linux/reference/minio-mc.html#minio-client)) if needed:
+
     ```bash
-    # Install MinIO client (mc) if needed: https://min.io/docs/minio/linux/reference/mc.html
-    mc alias set local http://localhost:9000 minioadmin minioadmin
-    mc mb local/mlflow-artifacts
+    curl https://dl.min.io/client/mc/release/linux-amd64/mc \
+    --create-dirs \
+    -o $HOME/minio-binaries/mc
+
+    chmod +x $HOME/minio-binaries/mc
+    export PATH=$PATH:$HOME/minio-binaries/
+
+    mc --help    
+    ```
+
+    Then create a bucket like this:
+
+    ```bash
+    mc alias set my-minio http://localhost:9000 minioadmin minioadmin
+    mc mb my-minio/mlflow-artifacts
     ```
 
 ---
@@ -203,7 +219,7 @@ volumes:
 
 ---
 
-Awesome! Here’s how to update your `src/train.py` to use this local MLflow remote tracking setup with PostgreSQL + MinIO, assuming the environment variables are set as before.
+Here’s how to update your `src/train.py` to use this local MLflow remote tracking setup with PostgreSQL + MinIO, assuming the environment variables are set as before.
 
 ---
 
@@ -241,7 +257,7 @@ mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 mlflow.set_experiment("IrisClassifier")
 
 PROCESSED_DATA_PATH = "data/processed/iris_processed.csv"
-MODEL_OUTPUT_PATH = "models/model.pt"
+MODEL_OUTPUT_PATH = "models/model.pth"
 
 def main():
     df = pd.read_csv(PROCESSED_DATA_PATH)
@@ -277,29 +293,13 @@ if __name__ == "__main__":
 
 ---
 
-### How to run
+## Next: Deploy on AWS EC2 or ECS
 
-1. Make sure docker-compose services are running:
+Once verified locally, you can:
 
-    ```bash
-    docker-compose up -d
-    ```
-
-2. Set env vars in the terminal session where you run `train.py`:
-
-    ```bash
-    export MLFLOW_TRACKING_URI=http://localhost:5000
-    export AWS_ACCESS_KEY_ID=minioadmin
-    export AWS_SECRET_ACCESS_KEY=minioadmin
-    export MLFLOW_S3_ENDPOINT_URL=http://localhost:9000
-    ```
-
-3. Run your training:
-
-    ```bash
-    python src/train.py
-    ```
-
-4. Visit the MLflow UI at [http://localhost:5000](http://localhost:5000) to see your logged runs and model artifacts.
+* Deploy PostgreSQL (RDS)
+* Keep artifacts on S3
+* Run MLflow server on EC2
+* Use a domain + SSL via Nginx/Cloudflare
 
 ---
