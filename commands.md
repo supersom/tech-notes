@@ -182,6 +182,12 @@ curl -o output.html https://example.com
 
 curl -H "Authorization: Bearer token123" https://api.example.com/endpoint
 
+## Snap
+
+### find packages
+
+snap find minio-client
+
 ## Linux
 
 ### find - search / for {aws_completer}
@@ -191,3 +197,17 @@ find / -name {aws_completer}
 ### Looking for env vars containing {STR}
 
 printenv | grep {STR}
+
+### Turn off/on bash history - prevent sensitive info typed into terminal from leaking into plain text
+
+bash +o history # off
+bash -o history # on
+
+## Tools to investigate
+
+tmux, nohup - so that process doesn't terminate when SSH closed
+supervisord, systemd - services in production
+
+## Python packages
+
+python-dotenv
